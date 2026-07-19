@@ -2,6 +2,7 @@ const express = require("express");
 
 const app = express();
 
+// Middleware
 app.use(express.json());
 
 const PORT = 3000;
@@ -61,6 +62,32 @@ app.get("/tasks/:id", (req, res) => {
   res.status(200).json(task);
 });
 
+// Create a new task
+app.post("/tasks", (req, res) => {
+  const { title } = req.body;
+
+  // Validation
+  if (!title || title.trim() === "") {
+    return res.status(400).json({
+      error: "Title is required",
+    });
+  }
+
+  // Create new task
+  const newTask = {
+    id: tasks.length > 0 ? tasks[tasks.length - 1].id + 1 : 1,
+    title: title,
+    done: false,
+  };
+
+  // Add task to array
+  tasks.push(newTask);
+
+  // Return created task
+  res.status(201).json(newTask);
+});
+
+// Start Server
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
